@@ -45,9 +45,22 @@ _______________________________________________________________________
 
 ### Assignment
 
+* Explore the NOAA Storm Data base and answer basic questions about sever weather events.  
+* Use datasets to answer the questions below and show code for entire analysis.  
+* Analysis should consist of tables, figures and other summaries.  
+
 ### Questions
 
+Address the following questions:
+
+1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?  
+2. Across the United States, which types of events have the greatest economic consequences?  
+
+Write your report as if it were to be read by a government or a municipal manager who might be responsible for preparing for severe weather events and will need to prioritize resources for different types of events. No need to make any specific recommendations in the report.
+
 ### Requirements
+
+
 
 ### Document layout
 
