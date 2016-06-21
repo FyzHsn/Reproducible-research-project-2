@@ -13,6 +13,16 @@ In this project we explore the U.S. National Oceanic and Atmospheric Administrat
 Data
 ----
 
+The data for this website is in the form of a csv file compressed via the bzip2 algorithm. The file can be downloaded from:  
+
+* https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2  
+Information regarding some of the variables can be found at:
+
+* National weather service [Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf)  
+
+* National Climatic Data Center Storm Events [FAQ](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf)
+
+
 _______________________________________________________________________
 
 ### Checklist
