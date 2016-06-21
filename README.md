@@ -28,6 +28,21 @@ _______________________________________________________________________
 
 ### Checklist
 
+1. Create a valid RPubs URL pointing to a data analysis document for this assignment. []    
+2. Create a complete PDF file presenting the data analysis. []    
+3. Include description and justification for any data transformations. []    
+4. Document title that briefly summarizes the data analysis. []  
+5. Document synopsis with a description and summary of the data analysis in less than 10 sentences. []  
+6. Data processing section that describes how the data was loaded into R and processed for analysis. []   
+7. Results section where the main results are presented. []  
+8. At least one figure in the document containing a plot. []  
+9. At most 3 figures in the document. []  
+10. Start analysis from raw data (original .csv.bz2 file). []  
+11. Address question of which types of events are most harmful to population health. []  
+12. Address question of which types of events have the greatest economic consequences. []  
+13. The entire analysis should be reproducible. []  
+14. Descriptive  captions of figures, i.e. description near the figure of what is happening in the figure. []  
+
 ### Assignment
 
 ### Questions
