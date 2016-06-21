@@ -58,10 +58,24 @@ Address the following questions:
 
 Write your report as if it were to be read by a government or a municipal manager who might be responsible for preparing for severe weather events and will need to prioritize resources for different types of events. No need to make any specific recommendations in the report.
 
-### Requirements
-
-
-
 ### Document layout
 
+* Title
+* Synopsis  
+* Data processing section: Consider using cache = TRUE for certain code chunks.  
+* Results section  
+* Atleast one figure  
+* No more than 3 figures  
+* Show all your code, i.e. ensure that echo = TRUE.  
+
 ### Publishing my analysis
+
+Publish document in RPubs and include URL in README file. Include PDF file on Github repo as well.
+
+
+
+
+
+
+
+
