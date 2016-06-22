@@ -1,0 +1,129 @@
+---
+title: "Impact of severe weather events on Public Health and the Economy"
+author: "Faiyaz Hasan"
+date: "June 21, 2016"
+output: html_document
+---
+
+In this document, we takes datasets from the U.S. National Oceanic and Atmospheric Administration's storm database to find out which types of severe weather events lead to maximal (i) economic and (ii) public health damage. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading and processing data
+---------------------------
+```{r working directory}
+setwd("C:\\Users\\Windows\\Documents\\JHU_Data_Science\\Course_5\\Project_2") # Set Project_2 as the working directory
+```
+
+Set the database url, destination filename in the Project_2 folder and then load the data.
+
+```{r data load, cache = TRUE}
+URL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2" # Database URL
+destfile <- "storm_data.csv.bz2" # destination file name
+download.file(URL, destfile) # download file
+```
+
+Read data from the data file.
+```{r read data, cache = TRUE}
+storm_data <- read.csv(destfile) # Read in csv format data
+```
+
+Change column names to lower case.
+```{r change column names}
+names(storm_data) <- tolower(names(storm_data)) # Change all field names to lowercase
+```
+
+Details of the data frame: dimensions, variable names, structure etc.
+```{r data details}
+dim(storm_data) # dimensions of storm data
+names(storm_data) # column names of storm data
+str(storm_data) # structure of storm data
+```
+In this analysis, we are interested in three types of variables: variables indicating severe event type, economic impact and public health impact. We remove any other variables that are not relevant. Information about these variables and the data in general come from the National Climatic Data Center Storm Events [FAQ](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf) and the National Weather Service [storm data documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf).
+
+The following three variable categories are of interest. We remove all other columns of data.
+
+Variables names related to storm type: `evtype`
+Variable names related to public health: `fatalities`, `injuries`
+Variable names related to property/crop damage: `propdmg`, `propdmgexp`, `cropdmg`, and `cropdmgexp`. The first three significant digits are given by `propdmg` and `cropdmg`. The exponents are given by `propdmgexp` and `cropdmgexp`.
+
+```{r Reduced columns, message = FALSE}
+library(dplyr)
+data <- select(storm_data, state__, county, evtype, fatalities, 
+               injuries, propdmg, propdmgexp, cropdmg, cropdmgexp) # Keep public health and economic (property/crops) impact data
+str(data) # structure of data set
+levels(factor(data$cropdmgexp)) # Set of values taken by cropdmgexp
+levels(factor(data$propdmgexp)) # Set of values taken by propdmgexp
+```
+
+Only one data point takes on the value of `-`. We replace it with `NA`.
+
+Replace exponents of property and crop damage characters by equivalent numeric value.
+```{r replace exponent characters}
+# Replace exponents by characters by equivalent numbers
+
+data$cropdmgexp <- sub("^1$", "10", data$cropdmgexp) 
+data$cropdmgexp <- sub("^2$", "100", data$cropdmgexp) 
+data$cropdmgexp <- sub("^3$", "1000", data$cropdmgexp) 
+data$cropdmgexp <- sub("^4$", "10000", data$cropdmgexp) 
+data$cropdmgexp <- sub("^5$", "100000", data$cropdmgexp) 
+data$cropdmgexp <- sub("^6$", "1000000", data$cropdmgexp) 
+data$cropdmgexp <- sub("^0$", "1", data$cropdmgexp) 
+data$cropdmgexp <- sub("^?$", "1", data$cropdmgexp) 
+data$cropdmgexp <- sub("^$", "1", data$cropdmgexp) 
+data$cropdmgexp <- sub("^[Kk]$", "100000", data$cropdmgexp) 
+data$cropdmgexp <- sub("^[Mm]$", "1000000", data$cropdmgexp)
+data$cropdmgexp <- sub("^[B]$", "1000000000", data$cropdmgexp)
+
+data$propdmgexp <- sub("^1$", "10", data$propdmgexp) 
+data$propdmgexp <- sub("^2$", "100", data$propdmgexp) 
+data$propdmgexp <- sub("^3$", "1000", data$propdmgexp) 
+data$propdmgexp <- sub("^4$", "10000", data$propdmgexp) 
+data$propdmgexp <- sub("^5$", "100000", data$propdmgexp) 
+data$propdmgexp <- sub("^6$", "1000000", data$propdmgexp) 
+data$propdmgexp <- sub("^7$", "10000000", data$propdmgexp) 
+data$propdmgexp <- sub("^8$", "100000000", data$propdmgexp) 
+data$propdmgexp <- sub("^0$", "1", data$propdmgexp) 
+data$propdmgexp <- sub("^?$", "1", data$propdmgexp) 
+data$propdmgexp <- sub("^$", "1", data$propdmgexp) 
+data$propdmgexp <- sub("^[Kk]$", "100000", data$propdmgexp) 
+data$propdmgexp <- sub("^[Mm]$", "1000000", data$propdmgexp)
+data$propdmgexp <- sub("^[B]$", "1000000000", data$propdmgexp)
+```
+
+The two characters `+` and `-` in `propdmgexp` are ambiguous. So we represent them as `NA`.
+
+```{r check/remove missing values}
+data[data == "-" | data == "+"] <- NA # Replace + and - with NA
+sum(!complete.cases(data)) # Number of rows with NA values
+```
+
+Convert `propdmgexp, cropdmgexp` into numeric values.
+```{r character to numeric values}
+data$propdmgexp <- suppressWarnings(as.numeric(data$propdmgexp))
+data$cropdmgexp <- suppressWarnings(as.numeric(data$cropdmgexp))
+econdmg <- data$propdmg * data$propdmgexp + data$cropdmg * data$cropdmgexp # Total economic damage
+pubdmg <- data$fatalities + data$injuries # Total public health damage
+data <- cbind(data, econdmg, pubdmg)
+str(data) # Structure of processed data
+```
+The final processed data is represented by the data frame `data'.
+
+
+Main Results
+------------
+
+
+
+
+
+
+
+
+
+
+
+
+
