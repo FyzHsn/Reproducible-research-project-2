@@ -115,6 +115,34 @@ The final processed data is represented by the data frame `data'.
 Main Results
 ------------
 
+### Economic Impact
+
+Let us look at a subset of the columns of `data` related to severe event type and the correspnding economic cost (in dollars).
+```{r create economic data frame}
+econdata <- select(data, evtype, econdmg) # [econ]omic impact [data]
+head(econdata)
+str(econdata)
+summary(econdata)
+```
+
+```{r total damage per event}
+eventdamage <- aggregate(econdmg ~ evtype, data = econdata, FUN = sum, na.rm = TRUE)
+head(arrange(eventdamage, desc(econdmg)), 15)
+```
+
+### Public Health Impact
+
+Let us look at a subset of the columns of `data` related to severe event type and the correspnding economic cost (in dollars).
+```{r create health data frame}
+healthdata <- select(data, evtype, pubdmg) # [econ]omic impact [data]
+head(healthdata)
+str(healthdata)
+summary(healthdata)
+```
+
+```{r total health damage per event}
+healthdamage <- aggregate(pubdmg ~ evtype, data = healthdata, FUN = sum, na.rm = TRUE)
+head(arrange(healthdamage, desc(pubdmg)), 15)
 
 
 

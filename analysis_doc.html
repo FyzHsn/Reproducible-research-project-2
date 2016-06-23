@@ -266,6 +266,94 @@ str(data) # Structure of processed data</code></pre>
 </div>
 <div id="main-results" class="section level2">
 <h2>Main Results</h2>
+<div id="economic-impact" class="section level3">
+<h3>Economic Impact</h3>
+<p>Let us look at a subset of the columns of <code>data</code> related to severe event type and the correspnding economic cost (in dollars).</p>
+<pre class="r"><code>econdata &lt;- select(data, evtype, econdmg) # [econ]omic impact [data]
+head(econdata)</code></pre>
+<pre><code>##    evtype econdmg
+## 1 TORNADO 2500000
+## 2 TORNADO  250000
+## 3 TORNADO 2500000
+## 4 TORNADO  250000
+## 5 TORNADO  250000
+## 6 TORNADO  250000</code></pre>
+<pre class="r"><code>str(econdata)</code></pre>
+<pre><code>## 'data.frame':    902297 obs. of  2 variables:
+##  $ evtype : Factor w/ 985 levels &quot;   HIGH SURF ADVISORY&quot;,..: 834 834 834 834 834 834 834 834 834 834 ...
+##  $ econdmg: num  2500000 250000 2500000 250000 250000 250000 250000 250000 2500000 2500000 ...</code></pre>
+<pre class="r"><code>summary(econdata)</code></pre>
+<pre><code>##                evtype          econdmg         
+##  HAIL             :288661   Min.   :0.000e+00  
+##  TSTM WIND        :219940   1st Qu.:0.000e+00  
+##  THUNDERSTORM WIND: 82563   Median :0.000e+00  
+##  TORNADO          : 60652   Mean   :1.854e+06  
+##  FLASH FLOOD      : 54277   3rd Qu.:1.000e+05  
+##  FLOOD            : 25326   Max.   :1.150e+11  
+##  (Other)          :170878   NA's   :28</code></pre>
+<pre class="r"><code>eventdamage &lt;- aggregate(econdmg ~ evtype, data = econdata, FUN = sum, na.rm = TRUE)
+head(arrange(eventdamage, desc(econdmg)), 15)</code></pre>
+<pre><code>##                evtype      econdmg
+## 1             TORNADO 380401669297
+## 2               FLOOD 253385435007
+## 3         FLASH FLOOD 175039063469
+## 4           TSTM WIND 147748999055
+## 5                HAIL 142732107316
+## 6   THUNDERSTORM WIND  97010850332
+## 7   HURRICANE/TYPHOON  72475320000
+## 8           LIGHTNING  60979177150
+## 9  THUNDERSTORM WINDS  47394651097
+## 10        STORM SURGE  45166030000
+## 11          HIGH WIND  39341666000
+## 12       WINTER STORM  19893455001
+## 13            DROUGHT  17444370000
+## 14          HURRICANE  15793181000
+## 15          ICE STORM  15276441050</code></pre>
+</div>
+<div id="public-health-impact" class="section level3">
+<h3>Public Health Impact</h3>
+<p>Let us look at a subset of the columns of <code>data</code> related to severe event type and the correspnding economic cost (in dollars).</p>
+<pre class="r"><code>healthdata &lt;- select(data, evtype, pubdmg) # [econ]omic impact [data]
+head(healthdata)</code></pre>
+<pre><code>##    evtype pubdmg
+## 1 TORNADO     15
+## 2 TORNADO      0
+## 3 TORNADO      2
+## 4 TORNADO      2
+## 5 TORNADO      2
+## 6 TORNADO      6</code></pre>
+<pre class="r"><code>str(healthdata)</code></pre>
+<pre><code>## 'data.frame':    902297 obs. of  2 variables:
+##  $ evtype: Factor w/ 985 levels &quot;   HIGH SURF ADVISORY&quot;,..: 834 834 834 834 834 834 834 834 834 834 ...
+##  $ pubdmg: num  15 0 2 2 2 6 1 0 15 0 ...</code></pre>
+<pre class="r"><code>summary(healthdata)</code></pre>
+<pre><code>##                evtype           pubdmg         
+##  HAIL             :288661   Min.   :   0.0000  
+##  TSTM WIND        :219940   1st Qu.:   0.0000  
+##  THUNDERSTORM WIND: 82563   Median :   0.0000  
+##  TORNADO          : 60652   Mean   :   0.1725  
+##  FLASH FLOOD      : 54277   3rd Qu.:   0.0000  
+##  FLOOD            : 25326   Max.   :1742.0000  
+##  (Other)          :170878</code></pre>
+<pre class="r"><code>healthdamage &lt;- aggregate(pubdmg ~ evtype, data = healthdata, FUN = sum, na.rm = TRUE)
+head(arrange(healthdamage, desc(pubdmg)), 15)</code></pre>
+<pre><code>##               evtype pubdmg
+## 1            TORNADO  96979
+## 2     EXCESSIVE HEAT   8428
+## 3          TSTM WIND   7461
+## 4              FLOOD   7259
+## 5          LIGHTNING   6046
+## 6               HEAT   3037
+## 7        FLASH FLOOD   2755
+## 8          ICE STORM   2064
+## 9  THUNDERSTORM WIND   1621
+## 10      WINTER STORM   1527
+## 11         HIGH WIND   1385
+## 12              HAIL   1376
+## 13 HURRICANE/TYPHOON   1339
+## 14        HEAVY SNOW   1148
+## 15          WILDFIRE    986</code></pre>
+</div>
 </div>
 
 
