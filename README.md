@@ -1,7 +1,7 @@
 Reproducible-research-project-2
 ===============================
 
-This is assignment 2 from the course Reproducible Research on coursera.
+This is assignment 2 from the course Reproducible Research on coursera. [URL for data analysis](http://rpubs.com/Faiyaz/191150) 
 
 Introduction
 ------------
@@ -28,20 +28,19 @@ _______________________________________________________________________
 
 ### Checklist
 
-1. Create a valid RPubs URL pointing to a data analysis document for this assignment. []    
-2. Create a complete PDF file presenting the data analysis. []    
-3. Include description and justification for any data transformations. []    
-4. Document title that briefly summarizes the data analysis. []  
-5. Document synopsis with a description and summary of the data analysis in less than 10 sentences. []  
-6. Data processing section that describes how the data was loaded into R and processed for analysis. []   
-7. Results section where the main results are presented. []  
-8. At least one figure in the document containing a plot. []  
-9. At most 3 figures in the document. []  
-10. Start analysis from raw data (original .csv.bz2 file). []  
-11. Address question of which types of events are most harmful to population health. []  
-12. Address question of which types of events have the greatest economic consequences. []  
-13. The entire analysis should be reproducible. []  
-14. Descriptive  captions of figures, i.e. description near the figure of what is happening in the figure. []  
+1. Create a valid RPubs URL pointing to a data analysis document for this assignment. [DONE]    
+2. Include description and justification for any data transformations. [DONE]    
+3. Document title that briefly summarizes the data analysis. [DONE]  
+4. Document synopsis with a description and summary of the data analysis in less than 10 sentences. [DONE]  
+5. Data processing section that describes how the data was loaded into R and processed for analysis. [DONE]   
+6. Results section where the main results are presented. [DONE]  
+7. At least one figure in the document containing a plot. [DONE]  
+8. At most 3 figures in the document. [DONE]  
+9. Start analysis from raw data (original .csv.bz2 file). [DONE]  
+10. Address question of which types of events are most harmful to population health. [DONE]  
+11. Address question of which types of events have the greatest economic consequences. [DONE]  
+12. The entire analysis should be reproducible. DONE[]  
+13. Descriptive  captions of figures, i.e. description near the figure of what is happening in the figure. [DONE]  
 
 ### Assignment
 
