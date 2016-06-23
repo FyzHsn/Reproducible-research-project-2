@@ -5,14 +5,19 @@ date: "June 21, 2016"
 output: html_document
 ---
 
+
+1. Synopsis
+-----------
+
 In this document, we takes datasets from the U.S. National Oceanic and Atmospheric Administration's storm database to find out which types of severe weather events lead to maximal (i) economic and (ii) public health damage. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Loading and processing data
----------------------------
+
+2. Loading and processing data
+------------------------------
 ```{r working directory}
 setwd("C:\\Users\\Windows\\Documents\\JHU_Data_Science\\Course_5\\Project_2") # Set Project_2 as the working directory
 ```
@@ -51,8 +56,11 @@ Variable names related to property/crop damage: `propdmg`, `propdmgexp`, `cropdm
 
 ```{r Reduced columns, message = FALSE}
 library(dplyr)
+# Keep public health and economic (property/crops) impact data
 data <- select(storm_data, state__, county, evtype, fatalities, 
-               injuries, propdmg, propdmgexp, cropdmg, cropdmgexp) # Keep public health and economic (property/crops) impact data
+               injuries, propdmg, propdmgexp, cropdmg, cropdmgexp)
+# Thunderstorm winds and thunderstorm wind are the same thing
+data$evtype[which(data$evtype == "THUNDERSTORM WINDS")] <- "THUNDERSTORM WIND"
 str(data) # structure of data set
 levels(factor(data$cropdmgexp)) # Set of values taken by cropdmgexp
 levels(factor(data$propdmgexp)) # Set of values taken by propdmgexp
@@ -104,48 +112,66 @@ Convert `propdmgexp, cropdmgexp` into numeric values.
 ```{r character to numeric values}
 data$propdmgexp <- suppressWarnings(as.numeric(data$propdmgexp))
 data$cropdmgexp <- suppressWarnings(as.numeric(data$cropdmgexp))
-econdmg <- data$propdmg * data$propdmgexp + data$cropdmg * data$cropdmgexp # Total economic damage
-pubdmg <- data$fatalities + data$injuries # Total public health damage
-data <- cbind(data, econdmg, pubdmg)
+data$propdmg <- data$propdmg * data$propdmgexp # Property damage in dollars
+data$cropdmg <- data$cropdmg * data$cropdmgexp # Crop damage in dollars
+# Removing prop and crop dmg exp since it is redundant and might be confusing
+data <- select(data, state__, county, evtype, fatalities, injuries, propdmg, cropdmg)
 str(data) # Structure of processed data
 ```
 The final processed data is represented by the data frame `data'.
 
 
-Main Results
-------------
+3. Main Results
+---------------
+
+### Total damage in terms of dollars, fatalities and injuries
+We aggregate the total amount of damage done for crops, properties, injuries and fatalities per severe event type.  
+
+```{r aggregate impact}
+fatalitiesdata <- arrange(aggregate(fatalities ~ evtype, data = data, FUN = sum, na.rm = 
+                          TRUE), desc(fatalities))
+head(fatalitiesdata, 10)
+injuriesdata <- arrange(aggregate(injuries ~ evtype, data = data, FUN = sum, na.rm = 
+                        TRUE), desc(injuries))
+head(injuriesdata, 10)
+propertydata <- arrange(aggregate(propdmg ~ evtype, data = data, FUN = sum, na.rm = 
+                        TRUE), desc(propdmg))
+head(propertydata, 10)
+cropdata <- arrange(aggregate(cropdmg ~ evtype, data = data, FUN = sum, na.rm = TRUE), 
+                    desc(cropdmg))
+head(cropdata, 10)
+```
 
 ### Economic Impact
 
 Let us look at a subset of the columns of `data` related to severe event type and the correspnding economic cost (in dollars).
-```{r create economic data frame}
-econdata <- select(data, evtype, econdmg) # [econ]omic impact [data]
-head(econdata)
-str(econdata)
-summary(econdata)
-```
 
-```{r total damage per event}
-eventdamage <- aggregate(econdmg ~ evtype, data = econdata, FUN = sum, na.rm = TRUE)
-head(arrange(eventdamage, desc(econdmg)), 15)
+```{r property and crop damage histogram}
+propertydamagetop10 <- propertydata[1:10, ]
+cropdamagetop10 <- cropdata[1:10, ]
+par(mfrow = c(1, 2), mar = c(10, 3, 3, 2))
+barplot(propertydamagetop10$propdmg/10^9, las = 3, names.arg = propertydamagetop10$evtype, col = "steelblue", main = "Top 10 causes for property damage", cex.names = 0.8, ylab = "Property damage (billion dollars)")
+barplot(cropdamagetop10$cropdmg/10^9, las = 3, names.arg = cropdamagetop10$evtype, col = "steelblue", cex.names = 0.8, main = "Top 10 causes for crop damage", ylab = "Crop damage (billion dollars)")
 ```
 
 ### Public Health Impact
 
-Let us look at a subset of the columns of `data` related to severe event type and the correspnding economic cost (in dollars).
-```{r create health data frame}
-healthdata <- select(data, evtype, pubdmg) # [econ]omic impact [data]
-head(healthdata)
-str(healthdata)
-summary(healthdata)
+Let us look at the impact of severe events on fatalities and injuries.
+
+```{r public health impact}
+fatalitiestop10 <- fatalitiesdata[1:10, ]
+injuriestop10 <- injuriesdata[1:10, ]
+par(mfrow = c(1, 2), mar = c(10, 3, 3, 2))
+barplot(fatalitiestop10$fatalities, las = 3, cex.names = 0.8, names.arg = fatalitiestop10$evtype, col = "red", main = "Top 10 causes for fatalities", ylab = "Number of fatalities")
+barplot(injuriestop10$injuries, las = 3, cex.names = 0.8, names.arg = injuriestop10$evtype, col = "red", main = "Top 10 causes for injuries", ylab = "Number of injuries")
 ```
 
-```{r total health damage per event}
-healthdamage <- aggregate(pubdmg ~ evtype, data = healthdata, FUN = sum, na.rm = TRUE)
-head(arrange(healthdamage, desc(pubdmg)), 15)
+4. Summary of results
+---------------------
 
+Tornadoes are the most damaging event for fatalities, injuries and property damage while it is the 6th most damaging towards crops. Meanwhile, hail has the greatest impact on crop damage.
 
-
+Some form of flood(flash/regular) consistently rank high as a damaging factor across all the categories.
 
 
 
